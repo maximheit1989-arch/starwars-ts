@@ -1,24 +1,20 @@
-import {useContext, useEffect, useState} from "react";
 import type {HeroInfo} from "../utils/types";
-import {useParams} from "react-router";
-import {characters, defaultHero, period_month} from "../utils/constants.ts";
-import {SWContext} from "../utils/context.ts";
 import ErrorPage from "./ErrorPage.tsx";
+import {useValidHero} from "../hooks/customHooks.ts";
+import {characters, period_month} from "../utils/constants.ts";
+import {useEffect, useState} from "react";
 
 const AboutMe = () => {
     const [hero, setHero] = useState<HeroInfo>();
-    const {heroId = defaultHero} = useParams();
-    const {changeHero} = useContext(SWContext);
-
-    const heroExists = heroId in characters;
+    const {isValid, heroId} = useValidHero()
 
     useEffect(() => {
-        if (!heroExists) return;
-        changeHero(heroId);
-
-        const heroData = JSON.parse(localStorage.getItem(heroId)!);
-        if (heroData && ((Date.now() - heroData.timestamp) < period_month)) {
-            setHero(heroData.payload);
+        if (!isValid){
+            return;
+        }
+        const hero = JSON.parse(localStorage.getItem(heroId)!);
+        if (hero && ((Date.now() - hero.timestamp) < period_month)) {
+            setHero(hero.payload);
         } else {
             fetch(characters[heroId].url)
                 .then(response => response.json())
@@ -42,7 +38,7 @@ const AboutMe = () => {
         }
     }, [heroId]);
 
-    if (!heroExists) {
+    if (!hero) {
         return <ErrorPage />;
     }
 
