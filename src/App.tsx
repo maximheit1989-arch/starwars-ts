@@ -6,7 +6,7 @@ import {defaultHero} from "./utils/constants.ts";
 import {SWContext} from "./utils/context.ts";
 
 function App() {
-    const [hero, setHero] = useState(defaultHero);
+    const [hero, setHero] = useState<string | undefined>(defaultHero);
 
     return (
         <div className={'mx-2'}>

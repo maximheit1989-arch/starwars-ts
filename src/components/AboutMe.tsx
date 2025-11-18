@@ -1,15 +1,15 @@
+import {useEffect, useState} from "react";
+import {characters, period_month} from "../utils/constants.ts";
 import type {HeroInfo} from "../utils/types";
 import ErrorPage from "./ErrorPage.tsx";
 import {useValidHero} from "../hooks/customHooks.ts";
-import {characters, period_month} from "../utils/constants.ts";
-import {useEffect, useState} from "react";
 
 const AboutMe = () => {
     const [hero, setHero] = useState<HeroInfo>();
-    const {isValid, heroId} = useValidHero()
+    const {isValid, heroId} = useValidHero();
 
     useEffect(() => {
-        if (!isValid){
+        if (!isValid) {
             return;
         }
         const hero = JSON.parse(localStorage.getItem(heroId)!);
@@ -19,7 +19,7 @@ const AboutMe = () => {
             fetch(characters[heroId].url)
                 .then(response => response.json())
                 .then(data => {
-                    const info: HeroInfo = {
+                    const info = {
                         name: data.name,
                         gender: data.gender,
                         birth_year: data.birth_year,
@@ -28,35 +28,28 @@ const AboutMe = () => {
                         hair_color: data.hair_color,
                         skin_color: data.skin_color,
                         eye_color: data.eye_color
-                    };
+                    } as HeroInfo;
                     setHero(info);
                     localStorage.setItem(heroId, JSON.stringify({
                         payload: info,
                         timestamp: Date.now()
                     }));
-                });
+                })
         }
-    }, [heroId]);
+    }, [heroId])
 
-    if (!hero) {
-        return <ErrorPage />;
-    }
-
-    return (
+    return isValid ? (
         <>
-            {!!hero && (
+            {(!!hero) &&
                 <div className={'text-[2em] text-justify tracking-widest leading-14 ml-8'}>
-                    {Object.keys(hero).map(key => (
-                        <p key={key}>
-                            <span className={'text-3xl capitalize'}>
-                                {key.replace('_', ' ')}
-                            </span>: {hero[key as keyof HeroInfo]}
-                        </p>
-                    ))}
+                    {Object.keys(hero).map(key => <p key={key}>
+                        <span
+                            className={'text-3xl capitalize'}>{key.replace('_', ' ')}</span>: {hero[key as keyof HeroInfo]}
+                    </p>)}
                 </div>
-            )}
+            }
         </>
-    );
+    ) : <ErrorPage/>;
 };
 
 export default AboutMe;

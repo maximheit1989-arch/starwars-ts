@@ -1,9 +1,9 @@
-import {SWContext} from "../utils/context.ts";
 import {useContext} from "react";
-import {characters} from "../utils/constants.ts";
+import {SWContext} from "../utils/context.ts";
+import {characters, defaultHero} from "../utils/constants.ts";
 
 const Hero = () => {
-    const {hero} = useContext(SWContext);
+    const {hero = defaultHero} = useContext(SWContext);
 
     return (
         <section className="float-left w-1/4 mr-4 mt-2">

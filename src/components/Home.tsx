@@ -5,7 +5,7 @@ import ErrorPage from "./ErrorPage.tsx";
 import {useValidHero} from "../hooks/customHooks.ts";
 
 const Home = () => {
-    const {isValid} = useValidHero()
+    const {isValid} =useValidHero();
 
     return isValid ? (
         <main>
@@ -13,7 +13,7 @@ const Home = () => {
             <DreamTeam/>
             <OpeningCrawl/>
         </main>
-    ): <ErrorPage/>
+    ) : <ErrorPage/>;
 };
 
 export default Home;
